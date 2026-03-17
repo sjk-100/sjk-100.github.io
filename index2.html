@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharon Kandie · ML Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0f1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8eaf0;
+      --muted: #7a8299;
+      --accent1: #4fffb0;   /* mint green */
+      --accent2: #7b61ff;   /* violet */
+      --accent3: #ff6b6b;   /* coral */
+      --accent4: #ffbe45;   /* amber */
+      --accent5: #38bdf8;   /* sky blue */
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(11,15,26,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent1); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--accent1); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hero-bg .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+    }
+    .blob-1 { width: 600px; height: 600px; background: var(--accent2); top: -100px; right: -100px; animation: drift 12s ease-in-out infinite; }
+    .blob-2 { width: 400px; height: 400px; background: var(--accent1); bottom: 0; left: -50px; animation: drift 16s ease-in-out infinite reverse; }
+    .blob-3 { width: 300px; height: 300px; background: var(--accent5); top: 40%; left: 40%; animation: drift 10s ease-in-out infinite 3s; }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.05); }
+    }
+
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent1);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: var(--accent1);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+    .hero h1 .line2 { color: var(--accent1); }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      font-weight: 300;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.04em;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent1);
+      color: #0b0f1a;
+      font-weight: 500;
+    }
+    .btn-primary:hover { background: #7affc8; transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent1); color: var(--accent1); }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 6rem 3rem; }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--muted);
+      max-width: 600px;
+      font-weight: 300;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── SKILLS BAR ── */
+    .skills-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      max-width: 900px;
+    }
+    .skill-chip {
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .skill-chip:hover { border-color: var(--accent1); color: var(--accent1); }
+    .skill-chip.highlight { border-color: rgba(79,255,176,0.3); color: var(--accent1); background: rgba(79,255,176,0.05); }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .card-header {
+      padding: 1.75rem 1.75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .card-num {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--border);
+      letter-spacing: 0.1em;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .card-course {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .card-body {
+      padding: 1.5rem 1.75rem;
+      flex: 1;
+    }
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      font-weight: 300;
+    }
+
+    .card-metrics {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .metric {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.85rem;
+    }
+    .metric-val {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: var(--surface2);
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .card-footer {
+      padding: 1rem 1.75rem 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      padding: 0.45rem 1rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .card-link:hover { border-color: var(--accent1); color: var(--accent1); }
+    .card-link.primary {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    /* ── FEATURED card (spans 2 cols) ── */
+    .project-card.featured { grid-column: span 2; }
+    @media (max-width: 900px) {
+      .project-card.featured { grid-column: span 1; }
+    }
+
+    /* ── ABOUT ── */
+    .about-section { background: var(--surface); border-top: 1px solid var(--border); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p { color: var(--muted); font-weight: 300; line-height: 1.8; margin-bottom: 1rem; }
+    .about-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .highlight-item {
+      padding: 1.25rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .highlight-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .highlight-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .highlight-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── CONTACT ── */
+    .contact-section {
+      text-align: center;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .contact-section .section-title { margin-bottom: 0.75rem; }
+    .contact-section .section-sub { margin: 0 auto 2.5rem; }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { display: none; }
+      .hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .hero-stats { gap: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>S</span>haron Kandie</a>
+  <ul>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="hero-tag">Machine Learning · NLP · Computer Vision</div>
+
+  <h1>
+    Sharon<br>
+    <span class="line2">Kandie.</span>
+  </h1>
+
+  <p class="hero-desc">
+    Masters student in Data Science building intelligent systems — from neural networks that read handwritten digits to NLP pipelines that catch spam before you do.
+  </p>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">5</span>
+      <span class="stat-label">ML Projects</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">99%</span>
+      <span class="stat-label">LeNet-5 Accuracy</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">4</span>
+      <span class="stat-label">Search Algorithms</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">2</span>
+      <span class="stat-label">NLP Pipelines</span>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+    <a href="https://github.com/YOUR_GITHUB" target="_blank" class="btn btn-ghost">GitHub →</a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-label">Tech Stack</div>
+  <div class="section-title">Skills & Tools</div>
+  <div class="skills-grid">
+    <span class="skill-chip highlight">Python</span>
+    <span class="skill-chip highlight">PyTorch</span>
+    <span class="skill-chip highlight">scikit-learn</span>
+    <span class="skill-chip highlight">NLP / spaCy</span>
+    <span class="skill-chip highlight">Word2Vec</span>
+    <span class="skill-chip">TensorFlow / Keras</span>
+    <span class="skill-chip">Pandas</span>
+    <span class="skill-chip">NumPy</span>
+    <span class="skill-chip">Matplotlib / Seaborn</span>
+    <span class="skill-chip">CNN</span>
+    <span class="skill-chip">FFNN</span>
+    <span class="skill-chip">TF-IDF</span>
+    <span class="skill-chip">BFS / DFS / A*</span>
+    <span class="skill-chip">Jupyter Notebooks</span>
+    <span class="skill-chip">Git / GitHub</span>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Portfolio</div>
+  <div class="section-title">Selected Projects</div>
+  <p class="section-sub">A collection of machine learning, NLP, and algorithms projects built during my Masters in Data Science.</p>
+
+  <div class="projects-grid">
+
+    <!-- 1. LeNet-5 MNIST — FEATURED -->
+    <div class="project-card featured fade-in">
+      <div class="card-header">
+        <div class="card-accent" style="background: linear-gradient(90deg, var(--accent1), var(--accent5));"></div>
+        <span class="card-num">01</span>
+        <span class="card-icon">🧠</span>
+        <div class="card-title">MNIST Digit Classification</div>
+        <div class="card-course">MDS613 · PyTorch · CNN</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Implemented the classic <strong>LeNet-5</strong> convolutional neural network architecture from scratch in PyTorch to classify handwritten digits from the MNIST dataset. Designed the full pipeline — data loading, model architecture, training loop with Adam optimiser, and evaluation with confusion matrix analysis.
+        </p>
+        <div style="display:flex; gap: 2rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+          <div>
+            <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 0.5rem;">MODEL ARCHITECTURE</p>
+            <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent1); line-height: 1.8;">
+              Input (28×28) → Conv1 (6 filters) → AvgPool<br>
+              → Conv2 (16 filters) → AvgPool<br>
+              → FC (120) → FC (84) → Output (10)
+            </div>
+          </div>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent1);">~99%</div>
+            <div class="metric-label">Test Accuracy</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent5);">10</div>
+            <div class="metric-label">Epochs</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent2);">60K</div>
+            <div class="metric-label">Training Samples</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent4);">Adam</div>
+            <div class="metric-label">Optimiser</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">PyTorch</span>
+          <span class="tag">CNN</span>
+          <span class="tag">LeNet-5</span>
+          <span class="tag">MNIST</span>
+          <span class="tag">Computer Vision</span>
+          <span class="tag">Deep Learning</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://github.com/YOUR_GITHUB/mnist-lenet5" target="_blank" class="card-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="MNIST_Classification_Using_LeNet-5__PyTorch_Implementation_.ipynb" class="card-link">📓 Notebook</a>
+      </div>
+    </div>
+
+    <!-- 2. NLP Spam Detection -->
+    <div class="project-card featured fade-in">
+      <div class="card-header">
+        <div class="card-accent" style="background: linear-gradient(90deg, var(--accent3), var(--accent4));"></div>
+        <span class="card-num">02</span>
+        <span class="card-icon">🔍</span>
+        <div class="card-title">NLP Spam Detection System</div>
+        <div class="card-course">MDS619 · Group Project · Two Pipelines</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Built a complete SMS spam classifier using the <strong>SMS Spam Collection Dataset</strong> (~86.6% ham, 13.4% spam). Implemented two end-to-end NLP pipelines and compared their performance — tackling the class imbalance problem by using precision/recall and PR-AUC as primary metrics rather than raw accuracy.
+        </p>
+        <div class="card-metrics">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent3);">Pipeline A</div>
+            <div class="metric-label">TF-IDF + Naïve Bayes + spaCy</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent4);">Pipeline B</div>
+            <div class="metric-label">Neural Network Classifier</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">NLP</span>
+          <span class="tag">spaCy</span>
+          <span class="tag">TF-IDF</span>
+          <span class="tag">Naïve Bayes</span>
+          <span class="tag">POS Tagging</span>
+          <span class="tag">NER</span>
+          <span class="tag">PR-AUC</span>
+          <span class="tag">Class Imbalance</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://github.com/YOUR_GITHUB/nlp-spam-detection" target="_blank" class="card-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="MDS619_NLP_Group_Project_.ipynb" class="card-link">📓 Notebook</a>
+      </div>
+    </div>
+
+    <!-- 3. Maze Solver -->
+    <div class="project-card fade-in">
+      <div class="card-header">
+        <div class="card-accent" style="background: linear-gradient(90deg, var(--accent2), var(--accent5));"></div>
+        <span class="card-num">03</span>
+        <span class="card-icon">🌀</span>
+        <div class="card-title">Maze Solver: Search Algorithms</div>
+        <div class="card-course">Algorithms · AI Search</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Implemented and compared four fundamental graph search algorithms on a grid maze — from uninformed to informed search. Measured path length, nodes expanded, and cost efficiency to demonstrate the trade-offs between completeness and optimality.
+        </p>
+        <div class="card-metrics">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent2);">BFS</div>
+            <div class="metric-label">Optimal (uniform cost)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent5);">A*</div>
+            <div class="metric-label">Optimal + Efficient</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">BFS</span>
+          <span class="tag">DFS</span>
+          <span class="tag">Greedy</span>
+          <span class="tag">A*</span>
+          <span class="tag">Heuristic Search</span>
+          <span class="tag">Graph Theory</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://github.com/YOUR_GITHUB/maze-search" target="_blank" class="card-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="Mazes_in_Python.ipynb" class="card-link">📓 Notebook</a>
+      </div>
+    </div>
+
+    <!-- 4. FFNN Word2Vec -->
+    <div class="project-card fade-in">
+      <div class="card-header">
+        <div class="card-accent" style="background: linear-gradient(90deg, var(--accent4), var(--accent3));"></div>
+        <span class="card-num">04</span>
+        <span class="card-icon">📰</span>
+        <div class="card-title">News Classifier: FFNN + Word2Vec</div>
+        <div class="card-course">MDS619 · Assessment 2 · Deep Learning</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Trained custom <strong>Word2Vec embeddings</strong> from scratch on the AG News dataset, then used them as input to a Feedforward Neural Network to classify articles as Business or Sci/Tech. Full pipeline from raw text preprocessing to padded sequence prediction.
+        </p>
+        <div class="card-metrics">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent4);">72.4%</div>
+            <div class="metric-label">Accuracy</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent3);">75.8%</div>
+            <div class="metric-label">F1-Score</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">Word2Vec</span>
+          <span class="tag">FFNN</span>
+          <span class="tag">Text Classification</span>
+          <span class="tag">Embeddings</span>
+          <span class="tag">AG News</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://github.com/YOUR_GITHUB/ffnn-word2vec" target="_blank" class="card-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="MDS619_Assessment2_Part2_FFNN_Word2Vec__1_.ipynb" class="card-link">📓 Notebook</a>
+      </div>
+    </div>
+
+    <!-- 5. Loan Approval -->
+    <div class="project-card fade-in">
+      <div class="card-header">
+        <div class="card-accent" style="background: linear-gradient(90deg, var(--accent5), var(--accent2));"></div>
+        <span class="card-num">05</span>
+        <span class="card-icon">💰</span>
+        <div class="card-title">Loan Approval Prediction</div>
+        <div class="card-course">ML · Classification · Model Comparison</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Predicted loan approval outcomes using multiple machine learning classifiers. Handled missing data, feature engineering, and scaling — then benchmarked Logistic Regression, Decision Tree, and KNN models to find the best performer.
+        </p>
+        <div class="card-metrics">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent5);">80%</div>
+            <div class="metric-label">KNN Accuracy</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--accent2);">3</div>
+            <div class="metric-label">Models Compared</div>
+          </div>
+        </div>
+        <div class="card-tags">
+          <span class="tag">Logistic Regression</span>
+          <span class="tag">Decision Tree</span>
+          <span class="tag">KNN</span>
+          <span class="tag">Feature Engineering</span>
+          <span class="tag">scikit-learn</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://github.com/YOUR_GITHUB/loan-approval" target="_blank" class="card-link primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+        <a href="Loan_Approval.ipynb" class="card-link">📓 Notebook</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-label">About Me</div>
+      <div class="section-title">Building with data,<br>thinking with algorithms.</div>
+      <p>I'm Sharon Kandie (SPI240435), a Masters student in Data Science with a focus on machine learning and natural language processing.</p>
+      <p>My work spans computer vision, NLP, and classical ML — I enjoy taking complex datasets and turning them into models that actually work and can be explained clearly.</p>
+      <p>When I'm not training neural networks, I'm reading papers, comparing algorithm trade-offs, and finding ways to make models more interpretable.</p>
+      <div style="margin-top: 2rem;">
+        <a href="https://github.com/YOUR_GITHUB" target="_blank" class="btn btn-ghost">View GitHub →</a>
+      </div>
+    </div>
+    <div class="about-highlights">
+      <div class="highlight-item">
+        <span class="highlight-icon">🎯</span>
+        <div>
+          <div class="highlight-title">Deep Learning</div>
+          <div class="highlight-desc">Built CNNs (LeNet-5) and FFNNs from scratch using PyTorch and Keras, with full training pipelines and evaluation.</div>
+        </div>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon">💬</span>
+        <div>
+          <div class="highlight-title">Natural Language Processing</div>
+          <div class="highlight-desc">Hands-on with TF-IDF, Word2Vec embeddings, spaCy POS/NER, and multi-pipeline text classification systems.</div>
+        </div>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon">🔬</span>
+        <div>
+          <div class="highlight-title">Classical ML & Algorithms</div>
+          <div class="highlight-desc">Comfortable benchmarking models (LR, KNN, Decision Trees) and implementing search algorithms (BFS, DFS, A*) from first principles.</div>
+        </div>
+      </div>
+      <div class="highlight-item">
+        <span class="highlight-icon">📊</span>
+        <div>
+          <div class="highlight-title">Rigorous Evaluation</div>
+          <div class="highlight-desc">Applies precision/recall, F1, confusion matrices, and AUC metrics — not just accuracy — to genuinely understand model performance.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-label">Get In Touch</div>
+  <div class="section-title">Let's Connect</div>
+  <p class="section-sub">Open to internships, collaborations, and opportunities in ML engineering or data science.</p>
+  <div class="contact-links">
+    <a href="mailto:your.email@example.com" class="btn btn-primary">✉️ Email Me</a>
+    <a href="https://github.com/YOUR_GITHUB" target="_blank" class="btn btn-ghost">GitHub</a>
+    <a href="https://linkedin.com/in/YOUR_LINKEDIN" target="_blank" class="btn btn-ghost">LinkedIn</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Sharon Kandie · Masters in Data Science</p>
+  <p>Built with HTML/CSS · Hosted on GitHub Pages</p>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
